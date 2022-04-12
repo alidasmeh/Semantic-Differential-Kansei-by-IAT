@@ -1,6 +1,6 @@
 {
     "times": {
-        "resting_between_trials": 30000,
+        "resting_between_trials": 5000,
         "presenting_time": 1500
     },
     "images": [
