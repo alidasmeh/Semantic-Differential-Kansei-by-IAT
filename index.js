@@ -19,11 +19,13 @@ function loading_data() {
 }
 
 function randomizing_data(data) {
-    let first_time = [...shuffle(data.images)];
-    let second_time = [...shuffle(data.images)];
-    let third_time = [...shuffle(data.images)];
+    // let first_time = [...shuffle(data.images)];
+    // let second_time = [...shuffle(data.images)];
+    // let third_time = [...shuffle(data.images)];
 
-    data.images = first_time.concat(second_time, third_time)
+    // data.images = first_time.concat(second_time, third_time)
+
+    data.images = shuffle(data.images.concat(data.images, data.images));
     data.words = shuffle(data.words);
 
     global_data = data;
@@ -66,7 +68,7 @@ document.addEventListener('keydown', function(event) {
         $("#imagebox").html("+")
         setTimeout(function() {
             show_image();
-        }, 500);
+        }, global_data.times.waiting_slides);
 
     } else if (event.keyCode == 39) {
         temp["word"] = $("#word1").text();
@@ -75,7 +77,7 @@ document.addEventListener('keydown', function(event) {
         $("#imagebox").html("+")
         setTimeout(function() {
             show_image();
-        }, 500);
+        }, global_data.times.waiting_slides);
     }
 
     if (event.keyCode == 32) {
