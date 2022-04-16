@@ -6,9 +6,7 @@
     },
     "images": [
         "a1b1c1.jpeg",
-        "a1b1c2.jpeg",
-        "a1b2c1.jpeg",
-        "a1b2c2.jpeg"
+        "a1b1c2.jpeg"
     ],
     "words": [{
             "word_one": "رسمی",
@@ -17,14 +15,6 @@
         {
             "word_one": "زشت",
             "word_two": "زیبا"
-        },
-        {
-            "word_one": "فکستنی",
-            "word_two": "شیک"
-        },
-        {
-            "word_one": "شکننده",
-            "word_two": "مقاوم"
         }
     ]
 }
