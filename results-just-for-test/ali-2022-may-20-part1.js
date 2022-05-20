@@ -1619,3 +1619,15 @@ let result_part1 = [{
         "tendency": "word 'شیک' is target. confidence : 100 "
     }
 ]
+
+
+const uniqueArray = result_part1.filter((value, index) => {
+    const _value = JSON.stringify(value);
+    return index === result_part1.findIndex(obj => {
+        return JSON.stringify(obj) === _value;
+    });
+});
+
+console.log(result_part1.length)
+
+console.log(uniqueArray.length)

@@ -160,12 +160,19 @@ function finished() {
         })
     })
 
-    console.log(report);
+
+    const uniqueArray = report.filter((value, index) => {
+        const _value = JSON.stringify(value);
+        return index === report.findIndex(obj => {
+            return JSON.stringify(obj) === _value;
+        });
+    });
+
+    console.log(uniqueArray);
     // not normilized
 
-
     console.log(JSON.stringify(global_data));
-    console.log(JSON.stringify(results));
+    console.log(JSON.stringify(uniqueArray));
 
     alert("سپاس.");
 }
