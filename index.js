@@ -168,11 +168,10 @@ function finished() {
         });
     });
 
-    console.log(uniqueArray);
-    // not normilized
+    let normilized_data = normilizeing(uniqueArray);
 
     console.log(JSON.stringify(global_data));
-    console.log(JSON.stringify(uniqueArray));
+    console.log(JSON.stringify(normilized_data));
 
     alert("سپاس.");
 }
@@ -194,4 +193,27 @@ function calc_tendency(avg_word_two, avg_word_one, pair_word) {
     }
 
     return "suspected to word averages.";
+}
+
+function normilizeing(raw_data) {
+    let max_time = 0
+    let min_time = 100000 // 100 seconds
+
+    raw_data.forEach(row => {
+        if (max_time < row.avg_word_one) max_time = row.avg_word_one
+        if (max_time < row.avg_word_two) max_time = row.avg_word_two
+
+        if (min_time > row.avg_word_one && row.avg_word_one != 0) min_time = row.avg_word_one
+        if (min_time > row.avg_word_two && row.avg_word_two != 0) min_time = row.avg_word_two
+    })
+
+    raw_data.forEach(row => {
+        row.avg_word_one = (row.avg_word_one - min_time) / max_time;
+        if (row.avg_word_one < 0) row.avg_word_one = 0
+
+        row.avg_word_two = (row.avg_word_two - min_time) / max_time;
+        if (row.avg_word_two < 0) row.avg_word_two = 0
+    })
+
+    return raw_data;
 }
