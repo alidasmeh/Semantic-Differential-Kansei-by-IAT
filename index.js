@@ -155,7 +155,7 @@ function finished() {
                 pair_word,
                 avg_word_one: total_word_one,
                 avg_word_two: total_word_two,
-                tendency: calc_tendency(total_word_two, total_word_one, pair_word)
+                // tendency: 0
             })
         })
     })
@@ -170,29 +170,37 @@ function finished() {
 
     let normilized_data = normilizeing(uniqueArray);
 
+    // let with_tendency_data = calc_tendency(normilized_data)
+    let with_score_data = calc_data(normilized_data)
+
     console.log(JSON.stringify(global_data));
-    console.log(JSON.stringify(normilized_data));
+    console.log(JSON.stringify(with_score_data));
 
     alert("سپاس.");
 }
 
-function calc_tendency(avg_word_two, avg_word_one, pair_word) {
-    if (avg_word_one == 0) return `word '${pair_word.word_two}' is target. confidence : ${100} `;
-    if (avg_word_two == 0) return `word '${pair_word.word_one}' is target. confidence : ${100} `;
+function calc_tendency(data) {
 
-    if (avg_word_two > avg_word_one) {
-        // tendency : word_one (avg for word one is samller)
-        let confidence = 100 - parseInt((avg_word_one / avg_word_two) * 100);
-        return `word '${pair_word.word_one}' is target. confidence : ${confidence} `;
-    }
+    data.forEach(row => {
+        if (row.avg_word_one == 0) {
+            row['tendency'] = `word '${row.pair_word.word_two}' is target. confidence : ${100} `;
+        } else if (row.avg_word_two == 0) {
+            row['tendency'] = `word '${row.pair_word.word_one}' is target. confidence : ${100} `;
+        } else if (row.avg_word_two > row.avg_word_one) {
+            // tendency : word_one (avg for word one is samller)
+            let confidence = 100 - parseInt((row.avg_word_one / row.avg_word_two) * 100);
+            row['tendency'] = `word '${row.pair_word.word_one}' is target. confidence : ${confidence} `;
+        } else if (row.avg_word_two < row.avg_word_one) {
+            // tendency : word_two (avg for word two is larger)
+            let confidence = 100 - parseInt((row.avg_word_two / row.avg_word_one) * 100);
+            row['tendency'] = `word '${row.pair_word.word_two}' is target. confidence : ${confidence} `;
+        } else {
+            row['tendency'] = "suspected to word averages.";
+        }
+    })
 
-    if (avg_word_two < avg_word_one) {
-        // tendency : word_two (avg for word two is larger)
-        let confidence = 100 - parseInt((avg_word_two / avg_word_one) * 100);
-        return `word '${pair_word.word_two}' is target. confidence : ${confidence} `;
-    }
+    return data
 
-    return "suspected to word averages.";
 }
 
 function normilizeing(raw_data) {
@@ -209,11 +217,28 @@ function normilizeing(raw_data) {
 
     raw_data.forEach(row => {
         row.avg_word_one = (row.avg_word_one - min_time) / max_time;
-        if (row.avg_word_one < 0) row.avg_word_one = 0
+        if (row.avg_word_one < 0) {
+            row.avg_word_one = 0
+        } else {
+            row.avg_word_one = 1 - row.avg_word_one;
+        }
 
         row.avg_word_two = (row.avg_word_two - min_time) / max_time;
-        if (row.avg_word_two < 0) row.avg_word_two = 0
+        if (row.avg_word_two < 0) {
+            row.avg_word_two = 0
+        } else {
+            row.avg_word_two = 1 - row.avg_word_two;
+        }
+
     })
 
     return raw_data;
+}
+
+function calc_data(raw_data) {
+    raw_data.forEach(row => {
+        row['score'] = Number((row.avg_word_two - row.avg_word_one).toFixed(2))
+    })
+
+    return raw_data
 }

@@ -397,8 +397,12 @@ function normilizeing(raw_data) {
         row.avg_word_one = (row.avg_word_one - min_time) / max_time;
         if (row.avg_word_one < 0) row.avg_word_one = 0
 
+        row.avg_word_one = 1 - row.avg_word_one;
+
         row.avg_word_two = (row.avg_word_two - min_time) / max_time;
         if (row.avg_word_two < 0) row.avg_word_two = 0
+        row.avg_word_two = 1 - row.avg_word_two;
+
     })
 
     return raw_data;
