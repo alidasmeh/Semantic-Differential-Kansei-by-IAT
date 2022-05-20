@@ -164,8 +164,8 @@ function finished() {
     // not normilized
 
 
-    // console.log(JSON.stringify(global_data));
-    // console.log(JSON.stringify(results));
+    console.log(JSON.stringify(global_data));
+    console.log(JSON.stringify(results));
 
     alert("سپاس.");
 }
