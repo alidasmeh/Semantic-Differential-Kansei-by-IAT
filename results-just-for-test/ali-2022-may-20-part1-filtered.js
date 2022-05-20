@@ -365,7 +365,7 @@ let filtered = [{
     {
         image: 'a1b1c2.jpeg',
         pair_word: { word_one: 'آرامش بخش', word_two: 'تنش زا' },
-        avg_word_one: 9198,
+        avg_word_one: 2198,
         avg_word_two: 869,
         tendency: "word 'تنش زا' is target. confidence : 91 "
     },
@@ -377,3 +377,31 @@ let filtered = [{
         tendency: "word 'شیک' is target. confidence : 100 "
     }
 ]
+
+
+
+
+function normilizeing(raw_data) {
+    let max_time = 0
+    let min_time = 100000 // 100 seconds
+
+    raw_data.forEach(row => {
+        if (max_time < row.avg_word_one) max_time = row.avg_word_one
+        if (max_time < row.avg_word_two) max_time = row.avg_word_two
+
+        if (min_time > row.avg_word_one && row.avg_word_one != 0) min_time = row.avg_word_one
+        if (min_time > row.avg_word_two && row.avg_word_two != 0) min_time = row.avg_word_two
+    })
+
+    raw_data.forEach(row => {
+        row.avg_word_one = (row.avg_word_one - min_time) / max_time;
+        if (row.avg_word_one < 0) row.avg_word_one = 0
+
+        row.avg_word_two = (row.avg_word_two - min_time) / max_time;
+        if (row.avg_word_two < 0) row.avg_word_two = 0
+    })
+
+    return raw_data;
+}
+
+console.log(normilizeing(filtered))
