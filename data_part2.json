@@ -1,7 +1,8 @@
 {
     "times": {
-        "resting_between_trials": 15000,
-        "presenting_time": 1500
+        "resting_between_trials": 5000,
+        "presenting_time": 1500,
+        "waiting_slides": 2000
     },
     "images": [
         "a1b1c1.jpeg",
@@ -15,30 +16,6 @@
         "a2b2c2.jpeg"
     ],
     "words": [{
-            "word_one": "رسمی",
-            "word_two": "خودمانی"
-        },
-        {
-            "word_one": "زشت",
-            "word_two": "زیبا"
-        },
-        {
-            "word_one": "فکستنی",
-            "word_two": "شیک"
-        },
-        {
-            "word_one": "شکننده",
-            "word_two": "مقاوم"
-        },
-        {
-            "word_one": "آرامش بخش",
-            "word_two": "تنش زا"
-        },
-        {
-            "word_one": "کلاسیک",
-            "word_two": "مدرن"
-        },
-        {
             "word_one": "فِیک",
             "word_two": "اصیل"
         },

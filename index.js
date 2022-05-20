@@ -10,8 +10,11 @@ let current_image = null;
 let timer_beginning = 0;
 
 function loading_data() {
+    let partNumber = Number(prompt(`بخش اول یا دوم؟`));
+    if (partNumber != 1 && partNumber != 2) return alert('Stopped');
+
     $.get(
-        "data.json",
+        `data_part${partNumber}.json`,
         function(response) {
             randomizing_data(response)
         }

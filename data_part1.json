@@ -1,7 +1,8 @@
 {
     "times": {
-        "resting_between_trials": 15000,
-        "presenting_time": 1500
+        "resting_between_trials": 5000,
+        "presenting_time": 1500,
+        "waiting_slides": 2000
     },
     "images": [
         "a1b1c1.jpeg",
@@ -37,26 +38,6 @@
         {
             "word_one": "کلاسیک",
             "word_two": "مدرن"
-        },
-        {
-            "word_one": "فِیک",
-            "word_two": "اصیل"
-        },
-        {
-            "word_one": "زمخت",
-            "word_two": "ظریف"
-        },
-        {
-            "word_one": "تزئینی",
-            "word_two": "کاربردی"
-        },
-        {
-            "word_one": "بدشکل",
-            "word_two": "چشم نواز"
-        },
-        {
-            "word_one": "طراحی اصولی",
-            "word_two": "طراحی غیر حرفه‌ای"
         }
     ]
 }
