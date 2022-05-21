@@ -1,5 +1,7 @@
 // the architecture of this code is procedural 
 // there is no await async in this code
+let fullname = prompt('enter your name');
+let partNumber = Number(prompt(`بخش اول یا دوم؟`));
 
 let global_data = null;
 let results = [];
@@ -10,7 +12,6 @@ let current_image = null;
 let timer_beginning = 0;
 
 function loading_data() {
-    let partNumber = Number(prompt(`بخش اول یا دوم؟`));
     if (partNumber != 1 && partNumber != 2) return alert('Stopped');
 
     $.get(
@@ -175,6 +176,8 @@ function finished() {
     console.log(JSON.stringify(global_data));
     console.log(JSON.stringify(with_score_data));
 
+    insert_to_db(with_score_data);
+
     alert("سپاس.");
 }
 
@@ -218,4 +221,23 @@ function calc_data(raw_data) {
     })
 
     return raw_data
+}
+
+function insert_to_db(data) {
+
+    $.post(
+        `http://localhost:1401/insertData`, {
+            fullname,
+            result: JSON.stringify(data),
+            partNumber
+        },
+        function(response) {
+            if (response.status) {
+                alert("Inserted to db")
+            } else {
+                alert("an error occured")
+            }
+        }
+    )
+
 }
