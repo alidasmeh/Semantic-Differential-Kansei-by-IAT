@@ -26,7 +26,8 @@ app.use('/', indexRouter);
 app.post(`/insertData`, async(req, res) => {
 
     let today = new Date();
-    let result = await db.query(`INSERT INTO main(fullname, date, result, part) VALUES ("${req.body.fullname}", "${today}", '${req.body.result}', "${req.body.partNumber}")`);
+    console.log(`INSERT INTO main(fullname, date, result, part, raw) VALUES ("${req.body.fullname}", "${today}", '${req.body.result}', "${req.body.partNumber}", '${req.body.raw}')`)
+    let result = await db.query(`INSERT INTO main(fullname, date, result, part, raw) VALUES ("${req.body.fullname}", "${today}", '${req.body.result}', "${req.body.partNumber}", '${req.body.raw}')`);
 
     if (result) {
         res.send({ status: true, error: [`row id : ${result.insertId}`] })
