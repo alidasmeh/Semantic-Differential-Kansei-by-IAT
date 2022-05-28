@@ -229,6 +229,7 @@ function insert_to_db(data) {
         `http://localhost:1401/insertData`, {
             fullname,
             result: JSON.stringify(data),
+            raw: JSON.stringify(results),
             partNumber
         },
         function(response) {
