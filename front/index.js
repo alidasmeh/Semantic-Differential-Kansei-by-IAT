@@ -151,14 +151,12 @@ function finished() {
             array_word_two.forEach(num => { total_word_two += num })
             if (array_word_two.length != 0) total_word_two = parseInt(total_word_two / array_word_two.length);
 
-            // if ((total_word_one < 1200 && total_word_one != 0) || (total_word_two < 1200 && total_word_two != 0)) {
             report.push({
-                    image,
-                    pair_word,
-                    avg_word_one: total_word_one,
-                    avg_word_two: total_word_two,
-                })
-                // }
+                image,
+                pair_word,
+                avg_word_one: total_word_one,
+                avg_word_two: total_word_two,
+            })
         })
     })
 
