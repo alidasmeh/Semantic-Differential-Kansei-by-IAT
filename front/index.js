@@ -151,13 +151,14 @@ function finished() {
             array_word_two.forEach(num => { total_word_two += num })
             if (array_word_two.length != 0) total_word_two = parseInt(total_word_two / array_word_two.length);
 
+            // if ((total_word_one < 1200 && total_word_one != 0) || (total_word_two < 1200 && total_word_two != 0)) {
             report.push({
-                image,
-                pair_word,
-                avg_word_one: total_word_one,
-                avg_word_two: total_word_two,
-                // tendency: 0
-            })
+                    image,
+                    pair_word,
+                    avg_word_one: total_word_one,
+                    avg_word_two: total_word_two,
+                })
+                // }
         })
     })
 
@@ -196,18 +197,20 @@ function normilizeing(raw_data) {
     })
 
     raw_data.forEach(row => {
-        row.avg_word_one = (row.avg_word_one - min_time) / max_time;
+        row.avg_word_one = (row.avg_word_one - min_time) / (max_time - min_time);
         if (row.avg_word_one < 0) {
+            // if avg_word_x is zero, the result of the above formula is a negative number, it makes it equal to zero.
             row.avg_word_one = 0
         } else {
-            row.avg_word_one = 1 - row.avg_word_one;
+            row.avg_word_one = row.avg_word_one;
         }
 
-        row.avg_word_two = (row.avg_word_two - min_time) / max_time;
+        row.avg_word_two = (row.avg_word_two - min_time) / (max_time - min_time);
         if (row.avg_word_two < 0) {
+            // if avg_word_x is zero, the result of the above formula is a negative number, it makes it equal to zero.
             row.avg_word_two = 0
         } else {
-            row.avg_word_two = 1 - row.avg_word_two;
+            row.avg_word_two = row.avg_word_two;
         }
 
     })
