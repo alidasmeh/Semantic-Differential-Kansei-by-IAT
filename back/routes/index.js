@@ -10,17 +10,30 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/rt/:fullname', async function(req, res, next) {
-    let rows = await db.query(`SELECT * FROM normalized2022june06 WHERE fullname='${req.params.fullname}' `)
+
+    let query = `SELECT * FROM normalized2022june06 WHERE fullname='${req.params.fullname}' `
+    if (req.params.fullname == "all") {
+        query = `SELECT * FROM normalized2022june06 `
+    }
+
+    let rows = await db.query(query)
+
+
     let counter = 0;
+    let all_counter = 0;
     let finalString = "";
     rows.forEach(row => {
         JSON.parse(row.raw).forEach(raw => {
             if (raw.duration > 3000) counter++;
+            all_counter++;
             finalString += `${raw.duration} <br/>`;
         })
     })
 
-    res.send(`${finalString} <br/> larger than 3000 : ${counter}`)
+    res.send(`larger than 3000 : ${counter} <br/> 
+                all : ${all_counter}<br/> 
+                Percentage : ${counter/all_counter} <hr/> 
+                ${finalString} `)
 
 });
 
@@ -55,14 +68,14 @@ router.get("/counting_smaller_and_larger/:treshold", async function(req, res) {
         final.push(temp);
     })
 
-    let larger_than_2_seconds_percent_average = final.reduce(sum_larger, 0) / final.length;
-    let smaller_than_2_seconds_percent_average = final.reduce(sum_smaller, 0) / final.length;
+    let larger_than_x_seconds_percent_average = final.reduce(sum_larger, 0) / final.length;
+    let smaller_than_x_seconds_percent_average = final.reduce(sum_smaller, 0) / final.length;
 
     let finalString = '';
 
-    finalString += `larger_than_2_seconds_percent: ` + larger_than_2_seconds_percent_average
+    finalString += `larger_than_x_seconds_percent: ` + larger_than_x_seconds_percent_average
     finalString += "<br/>";
-    finalString += `smaller_than_2_seconds_percent: ` + smaller_than_2_seconds_percent_average
+    finalString += `smaller_than_x_seconds_percent: ` + smaller_than_x_seconds_percent_average
 
     res.send(finalString)
 
@@ -120,9 +133,8 @@ router.get('/get_all_rt_grouped_by_person', async function(req, res, next) {
 router.get('/get_all_score_groupby_person', async function(req, res, next) {
     let fullname_and_scores_array = [];
 
-    let tableName = 'normalized2022june06';
+    let tableName = 'normalized';
 
-    console.log(`SELECT DISTINCT fullname FROM ${tableName} `);
     let persons = await db.query(`SELECT DISTINCT fullname FROM ${tableName} `);
 
 
@@ -145,14 +157,14 @@ router.get('/get_all_score_groupby_person', async function(req, res, next) {
 
     let csv = "";
     fullname_and_scores_array.forEach(row => {
-        csv += `, ${row['fullname']}`
+        csv += `${row['fullname']}, `
     })
     csv += `<br/>`;
 
     for (let count = 0; count < fullname_and_scores_array[0]['scores'].length; count++) {
         let line = '';
         fullname_and_scores_array.forEach(row => {
-            line += `, ${row["scores"][count]}`
+            line += `${row["scores"][count]}, `
         })
         csv += `${line} <br/>`;
     }
@@ -226,7 +238,8 @@ let product_and_adjectives_list = {
 router.get("/avg_score_per_product_per_adjective", async function(req, res) {
 
     try {
-        let records = await db.query(`SELECT * FROM main`);
+        let tableName = 'normalized2022june06';
+        let records = await db.query(`SELECT * FROM ${tableName}`);
         let avg_scores = [];
 
         product_and_adjectives_list.images.forEach(image => {
@@ -287,7 +300,7 @@ router.get('/normalizing', async function(req, res, next) {
         let rows = await db.query(`SELECT * FROM main ORDER BY id ASC`);
 
         rows.forEach(async function(row) {
-            let results = row['raw'];
+            let results = JSON.parse(row['raw']);
 
             let report = [];
 
@@ -305,10 +318,12 @@ router.get('/normalizing', async function(req, res, next) {
 
                     })
 
+                    // calc average word one 
                     let total_word_one = 0;
                     array_word_one.forEach(num => { total_word_one += num })
                     if (array_word_one.length != 0) total_word_one = parseInt(total_word_one / array_word_one.length);
 
+                    // calc average word two 
                     let total_word_two = 0;
                     array_word_two.forEach(num => { total_word_two += num })
                     if (array_word_two.length != 0) total_word_two = parseInt(total_word_two / array_word_two.length);
@@ -364,6 +379,16 @@ router.get('/normalizing', async function(req, res, next) {
 });
 
 function normilizeing(raw_data) {
+
+    // raw_data.forEach(row => {
+    //     let limit = 1000;
+    //     // curveing the large RTs 
+    //     if( row.avg_word_one > limit ) row.avg_word_one = limit;
+    //     if( row.avg_word_two > limit ) row.avg_word_two = limit;
+
+    // })
+
+    // finding max and min AVERAGE REACTIN TIME (pay attention!!!!!)
     let max_time = 0
     let min_time = Number.POSITIVE_INFINITY // 100 seconds
 
@@ -378,22 +403,40 @@ function normilizeing(raw_data) {
     // console.log(max_time, min_time)
 
     raw_data.forEach(row => {
-        row.avg_word_one = (row.avg_word_one - min_time) / (max_time - min_time);
+        // // dropping large RT 
+        // if( row.avg_word_one > 1000 || row.avg_word_two > 1000 ){
+        //     row.avg_word_one = 0;
+        //     row.avg_word_two = 0;
+        
+        // // end dropping large RT
+        // }else{
+
+        // }
+
+        let awo = row.avg_word_one
+        row.avg_word_one = ((row.avg_word_one - min_time) / (max_time - min_time));
         if (row.avg_word_one < 0) {
             // if avg_word_x is zero, the result of the above formula is a negative number, it makes it equal to zero.
             row.avg_word_one = 0
         } else {
-            row.avg_word_one = row.avg_word_one;
+            row.avg_word_one = 1 - row.avg_word_one;
         }
 
-        row.avg_word_two = (row.avg_word_two - min_time) / (max_time - min_time);
+        let awt = row.avg_word_two
+        row.avg_word_two = ((row.avg_word_two - min_time) / (max_time - min_time));
         if (row.avg_word_two < 0) {
             // if avg_word_x is zero, the result of the above formula is a negative number, it makes it equal to zero.
             row.avg_word_two = 0
         } else {
-            row.avg_word_two = row.avg_word_two;
+            row.avg_word_two = 1 - row.avg_word_two;
         }
 
+        console.log(`max_time, min_time = `, max_time , min_time , `    ==> max_time - min_time = `, (max_time - min_time))
+        console.log(`avg rt one = `, (awo), `      => calculated score word one : `, row.avg_word_one)
+        console.log(`avg rt tow = `, (awt), `      => calculated score word two : `, row.avg_word_two)
+        console.log(`calculated score = `, (row.avg_word_two))
+        console.log(`_________________________________________________________________________________________________________`)
+        
     })
 
     return raw_data;

@@ -5,7 +5,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors')
 
-var indexRouter = require('./routes/index');
 let db = require("./db/connection");
 
 var app = express();
@@ -21,7 +20,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', require('./routes/index'));
+app.use('/index2', require('./routes/index2'));
 
 app.post(`/insertData`, async(req, res) => {
 
