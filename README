@@ -1,0 +1,5 @@
+This code is part of my master thesis. 
+
+The final purpose of this program is finding the users emotional reaction through reaction time based on the Kansei Engineering and Implicit Association Test (Harvard).
+"back" folder is the backend code which must be run on a NodeJS server. 
+
